@@ -17,7 +17,7 @@ async function main() {
   const metadataURL = METADATA_URL;
 
   // We get the contract to deploy
-  const cryptoDevsContract = await hre.ethers.getContractFactory("CryptoDevs");
+  const cryptoDevsContract = await ethers.getContractFactory("CryptoDevs");
   const deployedCryptoDevsContract = await cryptoDevsContract.deploy(
   metadataURL,
   whitelistContract
