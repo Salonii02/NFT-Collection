@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import Web3Modal from "web3modal";
 import styles from '../styles/Home.module.css'
 import { Contract, providers, utils} from "ethers";
 import React, { useEffect, useRef, useState } from 'react';
@@ -9,6 +10,7 @@ export default function Home() {
   const [presaleStarted, setPresaleStarted]=useState(false);
   const [presaleEnded, setPresaleEnded]=useState(false);
   const [loading,setLoading]=useState(false);
+  const [paused,setPaused]=useState(false);
   // checks if the currently connected MetaMask wallet is the owner of the contract
   const [isOwner, setIsOwner] = useState(false);
   // tokenIdsMinted keeps track of the number of tokenIds that have been minted
@@ -133,6 +135,34 @@ export default function Home() {
       console.log(error);
     }
   };
+  const pauseContract = async() => {
+    try{
+      const signer=getProviderOrSigner(true); 
+      const nftContract=new Contract(NFT_CONTRACT_ADDRESS,abi,signer);
+      const tx= await nftContract.setPaused(true);
+      setLoading(true);
+      await tx.wait();
+      setLoading(false);
+      setPaused(true);
+      window.alert("Contract is Currently Paused due to emergency");
+    }catch(err){
+      console.log(err);
+    }
+  };
+  const unpauseContract = async() => {
+    try{
+      const signer=getProviderOrSigner(true); 
+      const nftContract=new Contract(NFT_CONTRACT_ADDRESS,abi,signer);
+      const tx= await nftContract.setPaused(false);
+      setLoading(true);
+      await tx.wait();
+      setLoading(false);
+      setPaused(false);
+      window.alert("Contract is UnPaused");
+    }catch(err){
+      console.log(err);
+    }
+  }
   const getTokenIdsMinted = async() => {
     try{
         const provider=getProviderOrSigner();
@@ -185,6 +215,22 @@ export default function Home() {
     }
     if (loading) {
       return <button className={styles.button}>Loading...</button>;
+    }
+    if(isOwner){
+      return (
+        <div>
+          <div className={styles.description}>Having Emergency?</div>
+          {paused ? 
+          (<button className={styles.button} onClick={pauseContract}>
+            Pause Contract 
+          </button>)
+           :
+          ( <button className={styles.button} onClick={unpauseContract}>
+            UnPause Contract 
+          </button>)
+           }
+        </div>
+      );
     }
     if(isOwner && !presaleStarted){
       return (
@@ -240,7 +286,7 @@ export default function Home() {
           {renderButton()}
         </div>
         <div>
-          <img className={styles.image} src="./cryptodevs/0.svg" />
+          <img className={styles.image} src="./0.svg" />
         </div>
       </div>
 

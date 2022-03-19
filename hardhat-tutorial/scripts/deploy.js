@@ -20,8 +20,6 @@ async function main() {
     METADATA_URL,
     WHITELIST_CONTRACT_ADDRESS
   );
-
-  await cryptoDevsContract.deployed();
   console.log(
     "Crypto Devs Contract Address:",
     deployedCryptoDevsContract.address

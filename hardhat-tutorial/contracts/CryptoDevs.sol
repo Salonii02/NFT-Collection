@@ -22,7 +22,7 @@ contract CryptoDevs is ERC721Enumerable, Ownable {
       }
     constructor(string memory baseURI, address whitelistContract) ERC721("Crypto Devs", "CD"){
         _baseTokenURI=baseURI;
-        whitelist=whitelistContract;
+        whitelist=IWhitelist(whitelistContract);
     }
     function startPresale() public onlyOwner {
           presaleStarted = true;
@@ -53,10 +53,10 @@ contract CryptoDevs is ERC721Enumerable, Ownable {
       function setPaused(bool val) public onlyOwner {
           _paused = val;
       }
-      function withdraw() {
-          address _owner=owner();
+      function withdraw() public onlyOwner {
+          address _owner=owner(); //owner of the contract
           uint256 amount=address(this).balance;
-          bool sent=_owner.call{value:amount}("");
+          (bool sent,)=_owner.call{value:amount}("");
           require(sent, "Failed to send Ether");
       }
       // Function to receive Ether. msg.data must be empty
