@@ -3,7 +3,6 @@
 //
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
-const hre = require("hardhat");
 const {ethers} = require("hardhat");
 const {WHITELIST_CONTRACT_ADDRESS,METADATA_URL} = require("../constants");
 async function main() {
@@ -13,12 +12,15 @@ async function main() {
   // If this script is run directly using `node` you may want to call compile
   // manually to make sure everything is compiled
   // await hre.run('compile');
+  const whitelistContract = WHITELIST_CONTRACT_ADDRESS;
+  // URL from where we can extract the metadata for a Crypto Dev NFT
+  const metadataURL = METADATA_URL;
 
   // We get the contract to deploy
   const cryptoDevsContract = await hre.ethers.getContractFactory("CryptoDevs");
   const deployedCryptoDevsContract = await cryptoDevsContract.deploy(
-    METADATA_URL,
-    WHITELIST_CONTRACT_ADDRESS
+  metadataURL,
+  whitelistContract
   );
   console.log(
     "Crypto Devs Contract Address:",
