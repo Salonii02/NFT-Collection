@@ -4,6 +4,7 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./IWhitelist.sol";
+import "hardhat/console.sol";
 
 contract CryptoDevs is ERC721Enumerable, Ownable {
     string _baseTokenURI;
@@ -21,6 +22,7 @@ contract CryptoDevs is ERC721Enumerable, Ownable {
           _;
       }
     constructor(string memory baseURI, address whitelistContract) ERC721("Crypto Devs", "CD"){
+        console.log("baseURI",baseURI);
         _baseTokenURI=baseURI;
         whitelist=IWhitelist(whitelistContract);
     }
