@@ -1,19 +1,18 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
-
-describe("Greeter", function () {
-  it("Should return the new greeting once it's changed", async function () {
-    const Greeter = await ethers.getContractFactory("Greeter");
-    const greeter = await Greeter.deploy("Hello, world!");
-    await greeter.deployed();
-
-    expect(await greeter.greet()).to.equal("Hello, world!");
-
-    const setGreetingTx = await greeter.setGreeting("Hola, mundo!");
-
-    // wait until the transaction is mined
-    await setGreetingTx.wait();
-
-    expect(await greeter.greet()).to.equal("Hola, mundo!");
+const {WHITELIST_CONTRACT_ADDRESS,METADATA_URL} = require("../constants");
+describe("CryptoDevs", function () {
+  it("Metadata and baseuri should be same ", async function () {
+    const whitelistContract = WHITELIST_CONTRACT_ADDRESS;
+    const metadataURL = METADATA_URL;
+    const cryptoDevsContract = await ethers.getContractFactory("CryptoDevs");
+    const deployedCryptoDevsContract = await cryptoDevsContract.deploy(
+        metadataURL,
+        whitelistContract
+    );
+    const baseURI = await deployedCryptoDevsContract._baseTokenURI;
+    console.log("Metadata", metadataURL);
+    console.log("baseURI",baseURI);
+    //expect(baseURI).to.equal(metadataURL);
   });
 });

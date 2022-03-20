@@ -26,6 +26,9 @@ contract CryptoDevs is ERC721Enumerable, Ownable {
         _baseTokenURI=baseURI;
         whitelist=IWhitelist(whitelistContract);
     }
+    function _baseURI() internal view virtual override returns (string memory) {
+        return _baseTokenURI;
+    }
     function startPresale() public onlyOwner {
           presaleStarted = true;
           // Set presaleEnded time as current timestamp + 5 minutes
